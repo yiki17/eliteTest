@@ -12,8 +12,9 @@
         <div class="content" v-if="loginSucess">
             <img class="content-image" :src="userInfo.avatarUrl" alt="">
             <p class="content-text">{{userInfo.nickName}}</p>
+            <span class="memberGrade" v-if="memberSucess">{{grade}}</span>
         </div>
-        <tomember v-if="loginSucess && !memberSucess"></tomember>
+        <tomember v-if="loginSucess && !memberSucess" @changeStatus="changeStatus"></tomember>
         <personmsg v-if="memberSucess"></personmsg>
         <!-- <button open-type="getPhoneNumber" @getphonenumber="getPhone">获取手机号</button> -->
     </div>
@@ -28,7 +29,8 @@ export default {
             loginSucess: false,
             memberSucess: false,
             userInfo: {},
-            baikeHide: false
+            baikeHide: false,
+            grade: '普通会员'
         }
     },
     components: {
@@ -48,13 +50,8 @@ export default {
                 this.loginSucess = true
             }
         },
-        getPhone(e){
-            console.log(e)
-            wx.login({
-                success (e) {
-                    wx.getUserInfo()
-                }
-            })
+        changeStatus(){
+            this.memberSucess = true
         },
         toAccountInfo() {
             wx.navigateTo({
@@ -86,6 +83,13 @@ export default {
             margin 50rpx auto 0
         .content-text
             text-align center
+        .memberGrade
+            display inline-block
+            margin 5px auto
+            padding 2px 5px
+            border 1px solid #cccccc
+            border-radius 10px
+            font-size 12px
     .login-wrapper
         position absolute
         bottom 10px
