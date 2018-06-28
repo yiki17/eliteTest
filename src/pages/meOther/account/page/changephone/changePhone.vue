@@ -3,7 +3,7 @@
         <div class="phone-title">输入新的手机号</div>
         <div class="phone-content">
             <picker class="phoneArea" mode="selector" :range="phoneArea" @change="changeSelect">{{getPhoneArea}}</picker>
-            <input class="phoneInp" type="number" focus="true">
+            <input class="phoneInp" type="number" focus="true" v-model="phone">
         </div>
         <div class="phone-btn">
             <button class="phone-sendCode" @click="sendCode">发送验证码</button>
@@ -16,6 +16,7 @@
         data () {
             return {
                 phoneSelect: 0,
+                phone:'',
                 phoneArea: ['中国 +86', '澳洲 +61']
             }
         },
@@ -29,6 +30,10 @@
                 this.phoneSelect = parseInt(e.mp.detail.value)
             },
             sendCode() {
+                this.$store.commit('changeUserStatus',{
+                    key: 'telephone',
+                    value: this.phone
+                })
                 wx.navigateTo({
                     url: './checkPhone/main'
                 })

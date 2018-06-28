@@ -3,8 +3,10 @@ import App from './App'
 import './style/weui.css'
 import './style/iconfont.css'
 import Fly from 'flyio/dist/npm/wx'
+import store from './store/index'
 
 Vue.prototype.$fly = new Fly()
+Vue.prototype.$store = store
 Vue.config.productionTip = false
 App.mpType = 'app'
 
@@ -23,7 +25,7 @@ export default {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
-      selectedColor: 'red',
+      // selectedColor: 'red',
       list: [
         {
           pagePath: 'pages/home/main',

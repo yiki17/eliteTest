@@ -3,73 +3,65 @@
         <div class="content" v-if="!loginSucess">
             <img class="content-image" src="https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=1667994205,255365672&fm=5" alt="">
             <!-- <button class="content-login" open-type="getUserInfo" @getuserinfo="getUser">获取授权</button> -->
-            <p class="content-text">未登录</p>
+            <p class="content-text">未知用户</p>
         </div>
         <div class="login-wrapper" v-if="!loginSucess">
-            <button class="login-btn" open-type="getUserInfo" @getuserinfo="getUser">点击登录</button>
+            <button class="login-btn" open-type="getUserInfo" @getuserinfo="getUser">微信登录</button>
         </div>
+        
         <div class="content" v-if="loginSucess">
             <img class="content-image" :src="userInfo.avatarUrl" alt="">
             <p class="content-text">{{userInfo.nickName}}</p>
         </div>
-        <div class="weui-cells"  v-if="loginSucess">
-            <navigator url="/pages/meOther/account/main" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <div class="weui-cell__bd">账户信息</div>
-                <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-            </navigator>
-            <!-- <div class="weui-cell" @click="toAccountInfo">
-                <div class="weui-cell__bd">账户信息</div>
-                <div class="weui-cell__ft">
-                    <div class="iconfont icon-iconfonti"></div>
-                </div>
-            </div> -->
-            <div class="weui-cell">
-                <div class="weui-cell__bd">是否隐藏商品百科</div>
-                <div class="weui-cell__ft">
-                    <switch @change="baikeChange" :checked="baikeHide"></switch>
-                </div>
-            </div>
-        </div>
+        <tomember v-if="loginSucess && !memberSucess"></tomember>
+        <personmsg v-if="memberSucess"></personmsg>
+        <!-- <button open-type="getPhoneNumber" @getphonenumber="getPhone">获取手机号</button> -->
     </div>
 </template>
 
 <script>
+import personmsg from '@/components/personMsg'
+import tomember from '@/components/toMember'
 export default {
     data () {
         return {
             loginSucess: false,
+            memberSucess: false,
             userInfo: {},
             baikeHide: false
         }
     },
+    components: {
+        personmsg,
+        tomember
+    },
     mounted() {
-        let config = wx.getStorageSync('config') || {}
-        console.log(config)
-        if(config){
-            this.baikeHide = config.baikeHide
-        }
+        
     },
     methods:{
         getUser (login) {
             console.log(login.mp.detail.userInfo)
             if(login.mp.detail.userInfo){
-                this.userInfo = login.mp.detail.userInfo
+                this.$store.commit('upadateUser', login.mp.detail.userInfo)
+                console.log(this.$store.state.user)
+                this.userInfo = this.$store.state.user
                 this.loginSucess = true
             }
+        },
+        getPhone(e){
+            console.log(e)
+            wx.login({
+                success (e) {
+                    wx.getUserInfo()
+                }
+            })
         },
         toAccountInfo() {
             wx.navigateTo({
                 url: '/pages/meOther/account/main'
             })
-        },
-        baikeChange(e) {
-            console.log(e)
-            let value = e.mp.detail.value
-            let config = wx.getStorageSync('config') || {}
-            config.baikeHide = value
-            this.baikeHide = value
-            wx.setStorageSync('config',config)
         }
+        
     }
 }
 </script>
