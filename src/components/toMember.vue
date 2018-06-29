@@ -10,11 +10,16 @@
 </template>
 
 <script>
+    import {showModal} from '@/util'
     export default {
         methods: {
             getPhone(e) {
                 console.log(e)
-                this.$emit('changeStatus',true)
+                if(e.mp.detail.encryptedData){
+                    this.$emit('changeStatus',true)
+                }else{
+                    showModal('失败','授权手机号之后才能成为会员')
+                }
             }
         }
     }

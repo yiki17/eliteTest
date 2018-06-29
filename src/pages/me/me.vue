@@ -23,6 +23,7 @@
 <script>
 import personmsg from '@/components/personMsg'
 import tomember from '@/components/toMember'
+import { showModal } from '@/util'
 export default {
     data () {
         return {
@@ -48,6 +49,8 @@ export default {
                 console.log(this.$store.state.user)
                 this.userInfo = this.$store.state.user
                 this.loginSucess = true
+            }else{
+                showModal('授权失败','请点击允许进行授权。')
             }
         },
         changeStatus(){
